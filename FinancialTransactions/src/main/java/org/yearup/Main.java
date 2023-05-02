@@ -1,7 +1,6 @@
 package org.yearup;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -77,8 +76,10 @@ public class Main {
                                 case "1":
                                     LocalDate now = LocalDate.now();
                                     LocalDate startOfMonth = LocalDate.of(now.getYear(), now.getMonthValue(), 1);
+                                    String Date = null;
+                                    Date = null;
                                     for (Transaction t : transactions) {
-                                        if (t.getDate().intern()) {
+                                        if (t.getDate().equalsIgnoreCase(Date)) {
                                             System.out.println(t);
                                         }
                                     }
@@ -88,10 +89,10 @@ public class Main {
                                     LocalDate startOfLastMonth = LocalDate.of(lastMonth.getYear(), lastMonth.getMonthValue(), 1);
                                     LocalDate endOfLastMonth = startOfMonth.minusDays(1);
                                     for (Transaction t : transactions) {
-                                        if (!t.getDate().intern()) {
+                                        if (!t.getDate().equalsIgnoreCase(Date)) {
                                             continue;
                                         }
-                                        if (t.getDate().intern()) {
+                                        if (t.getDate().equalsIgnoreCase(Date)) {
                                             System.out.println(t);
                                         } else if (t.getDate().equals(endOfLastMonth)) {
                                             System.out.println(t);
@@ -101,7 +102,7 @@ public class Main {
                                 case "3":
                                     LocalDate startOfYear = LocalDate.of(LocalDate.now().getYear(), 1, 1);
                                     for (Transaction t : transactions) {
-                                        if (t.getDate().intern()) System.out.println(t);
+                                        if (t.getDate().equalsIgnoreCase(Date)) System.out.println(t);
                                         else {
                                             if (t.getDate().equals(startOfYear)) {
                                                 System.out.println(t);
