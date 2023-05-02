@@ -39,4 +39,24 @@ public class Transaction {
     public String toString() {
         return date + "|" + time + "|" + description + "|" + vendor + "|" + amount;
     }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setVendor(String vendor) {
+        this.vendor = vendor;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
 }
