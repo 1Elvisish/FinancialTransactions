@@ -94,4 +94,7 @@ public class Ledger {
                 System.out.println("Invalid report option.");
         }
     }
+
+    public void addTransaction(Transaction payment) {
+    }
 }

@@ -1,7 +1,6 @@
 package org.yearup;
 
 import java.io.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class TransactionFile {
@@ -47,6 +46,15 @@ public class TransactionFile {
         } catch (IOException e) {
             System.out.println("Error writing to transaction file: " + e.getMessage());
         }
+    }
+
+    public void write(ArrayList<Transaction> deposit) {
+    }
+
+    public void addTransaction(Transaction payment) {
+    }
+
+    public void saveTransactions(ArrayList<Transaction> transactions) {
     }
 }
 
