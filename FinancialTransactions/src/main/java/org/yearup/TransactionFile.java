@@ -1,6 +1,7 @@
 package org.yearup;
 
 import java.io.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class TransactionFile {
@@ -21,12 +22,12 @@ public class TransactionFile {
                 if (parts.length != 5) {
                     throw new IOException("Invalid line in transaction file: " + line);
                 }
-                String date = parts[0];
-                String time = parts[1];
+                String LocalDate = parts[0];
+                String LocalTime = parts[1];
                 String description = parts[2];
                 String vendor = parts[3];
                 double amount = Double.parseDouble(parts[4]);
-                Transaction transaction = new Transaction(date, time, description, vendor, amount);
+                Transaction transaction = new Transaction(LocalDate, LocalTime, description, vendor, amount);
                 transactions.add(transaction);
             }
             reader.close();
