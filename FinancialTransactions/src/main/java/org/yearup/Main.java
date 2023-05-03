@@ -9,7 +9,11 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         TransactionFile transactionFile = new TransactionFile("transactions.csv");
-        ArrayList<Transaction> transactions = transactionFile.readTransactions();
+        ArrayList<Transaction> transactions = new ArrayList<Transaction>();
+       // add transactions to the list
+
+        Ledger ledger = new Ledger(transactions);
+
 
         Scanner scanner = new Scanner(System.in);
 
