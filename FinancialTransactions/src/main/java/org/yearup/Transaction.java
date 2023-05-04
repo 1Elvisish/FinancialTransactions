@@ -2,6 +2,7 @@ package org.yearup;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class Transaction {
     private LocalDate date;
@@ -25,9 +26,11 @@ public class Transaction {
         return date;
     }
 
-    public LocalTime getTime() {
-        return time;
-    }
+    public String getFormattedDate() {
+        return date.format(DateTimeFormatter.ISO_LOCAL_DATE);}
+
+    public LocalTime getTime() { return time; }
+
 
     public String getDescription() {
         return description;
@@ -43,7 +46,12 @@ public class Transaction {
 
     @Override
     public String toString() {
-        return date + "|" + time + "|" + description + "|" + vendor + "|" + amount;
+        return String.format("%s %s | %.2f | %s | %s", getFormattedDate(), getFormattedTime(), amount, vendor, description);
+    }
+
+    private Object getFormattedTime() {
+        final Object o = null;
+        return o;
     }
 
     public void setDate(LocalDate date) {

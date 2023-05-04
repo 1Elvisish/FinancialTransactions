@@ -1,5 +1,6 @@
 package org.yearup;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.time.LocalDate;
@@ -80,20 +81,19 @@ public class Ledger {
 
     private void displayYearToDateReport() {
          {
-            LocalDate now = LocalDate.now();
-            LocalDate startOfYear = LocalDate.of(now.getYear(), 1, 1);
-            double totalAmount = 0.0;
+             LocalDate now = LocalDate.now();
+             LocalDate startOfYear = LocalDate.of(now.getYear(), 1, 1);
+             double totalAmount = 0.0;
 
-            System.out.println("Transactions for Year To Date:");
+             System.out.println("Transactions for Year To Date:");
 
-            for (Transaction transaction : transactions) {
-                LocalDate transactionDate = LocalDate.parse(transaction.getDate());
-                if (!transactionDate.isBefore(startOfYear)) {
-                    System.out.println(transaction.toString());
-                    totalAmount += transaction.getAmount();
-                }
-            }
-
+             for (Transaction transaction : transactions) {
+                 LocalDate transactionDate = LocalDate.parse(transaction.getFormattedDate(), DateTimeFormatter.ISO_LOCAL_DATE);
+                 if (!transactionDate.isBefore(startOfYear)) {
+                     System.out.println(transaction.toString());
+                     totalAmount += transaction.getAmount();
+                 }
+             }
             System.out.println("Total amount for Year To Date: " + totalAmount);
         }
 
@@ -101,20 +101,20 @@ public class Ledger {
 
     private void displayMonthToDateReport() {
         LocalDate now = LocalDate.now();
-        LocalDate startOfMonth = LocalDate.of(now.getYear(), now.getMonth(), 1);
+        LocalDate startOfYear = LocalDate.of(now.getYear(), 1, 1);
         double totalAmount = 0.0;
 
-        System.out.println("Transactions for Month To Date:");
+        System.out.println("Transactions for Year To Date:");
 
         for (Transaction transaction : transactions) {
-            LocalDate transactionDate = LocalDate.parse(transaction.getDate());
-            if (!transactionDate.isBefore(startOfMonth)) {
+            LocalDate transactionDate = LocalDate.parse(transaction.getFormattedDate(), DateTimeFormatter.ISO_LOCAL_DATE);
+            if (!transactionDate.isBefore(startOfYear)) {
                 System.out.println(transaction.toString());
                 totalAmount += transaction.getAmount();
             }
         }
 
-        System.out.println("Total amount for Month To Date: " + totalAmount);
+        System.out.println("Total amount for Year To Date: " + totalAmount);
     }
 
     private void displayPreviousMonthReport() {
@@ -126,7 +126,7 @@ public class Ledger {
         System.out.println("Transactions for Previous Month:");
 
         for (Transaction transaction : transactions) {
-            LocalDate transactionDate = LocalDate.parse(transaction.getDate());
+            LocalDate transactionDate = LocalDate.parse(transaction.getFormattedDate());
             if (transactionDate.isAfter(startOfMonth) && transactionDate.isBefore(endOfMonth.plusDays(1))) {
                 System.out.println(transaction.toString());
                 totalAmount += transaction.getAmount();
@@ -138,14 +138,14 @@ public class Ledger {
 
     private void displayPreviousYearReport() {
         LocalDate now = LocalDate.now();
-        LocalDate startOfYear = LocalDate.of(now.getYear().minus(1), 1, 1);
-        LocalDate endOfYear = LocalDate.of(now.getYear().minus(1), 12, 31);
+        LocalDate startOfYear = LocalDate.of(now.minusYears(1).getYear(), 1, 1); // Fixed here
+        LocalDate endOfYear = LocalDate.of(now.minusYears(1).getYear(), 12, 31); // Fixed here
         double totalAmount = 0.0;
 
         System.out.println("Transactions for Previous Year:");
 
         for (Transaction transaction : transactions) {
-            LocalDate transactionDate = LocalDate.parse(transaction.getDate());
+            LocalDate transactionDate = LocalDate.parse(transaction.getFormattedDate());
             if (transactionDate.isAfter(startOfYear.minusDays(1)) && transactionDate.isBefore(endOfYear.plusDays(1))) {
                 System.out.println(transaction.toString());
                 totalAmount += transaction.getAmount();
@@ -154,6 +154,7 @@ public class Ledger {
 
         System.out.println("Total amount for Previous Year: " + totalAmount);
     }
+
 
     private void displayVendorReport() {
         Scanner scanner = new Scanner(System.in);
