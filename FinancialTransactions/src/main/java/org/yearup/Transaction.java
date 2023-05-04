@@ -11,7 +11,7 @@ public class Transaction {
     private String vendor;
     private double amount;
 
-    public Transaction(String LocalDate, String LocalTime, String description, String vendor, double amount) {
+    public Transaction(LocalDate date, LocalTime time, String description, String vendor, double amount) {
         this.date = date;
         this.time = time;
         this.description = description;
@@ -50,8 +50,9 @@ public class Transaction {
     }
 
     private Object getFormattedTime() {
-        final Object o = null;
-        return o;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm:ss");
+        return this.time.format(formatter);
+//        return null;
     }
 
     public void setDate(LocalDate date) {

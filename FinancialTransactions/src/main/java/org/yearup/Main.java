@@ -1,6 +1,8 @@
 package org.yearup;
 
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -9,9 +11,9 @@ public class Main {
         TransactionFile transactionFile = new TransactionFile("transactions.csv");
         ArrayList<Transaction> transactions = new ArrayList<Transaction>();
         // code to add transactions to the list
-        Transaction transaction1 = new Transaction("2023-04-15", "10:13:25", "ergonomic keyboard", "Amazon", -89.50);
-        Transaction transaction2 = new Transaction("2023-04-15", "11:15:00", "Invoice 1001 paid", "Joe", 1500.00);
-        transactions.add(transaction1);
+        Transaction transaction1 = new Transaction(LocalDate.parse("2023-04-15"), LocalTime.parse("10:13:25"), "ergonomic keyboard", "Amazon", -89.50);
+        Transaction transaction2 = new Transaction(LocalDate.parse("2023-04-15"), LocalTime.parse("11:15:00"), "Invoice 1001 paid", "Joe", 1500.00);
+
         transactions.add(transaction2);
 
         // add transactions to the list
@@ -49,7 +51,7 @@ public class Main {
                     System.out.print("Amount: ");
                     double amount = Double.parseDouble(scanner.nextLine());
 
-                    Transaction deposit = new Transaction(date, time, description, vendor, amount);
+                    Transaction deposit = new Transaction();
                     transactions.add(deposit);
                     transactionFile.saveTransactions(transactions);
 
@@ -71,7 +73,7 @@ public class Main {
                     double paymentAmount = Double.parseDouble(scanner.nextLine());
 
                     // create new transaction and add it to transactions list
-                    Transaction paymentTransaction = new Transaction(paymentDate, paymentTime, paymentDescription, paymentVendor, -1 * paymentAmount);
+                    Transaction paymentTransaction = new Transaction();
                     transactions.add(paymentTransaction);
 
                     // save updated transactions list to file
@@ -79,6 +81,7 @@ public class Main {
 
                     System.out.println("Payment added.");
                     break;
+
                 case "L":
                     System.out.println("Please choose an option:");
                     System.out.println("A) All");
@@ -87,7 +90,34 @@ public class Main {
                     System.out.println("R) Reports");
                     System.out.println("0) Back");
                     String ledgerSelection = scanner.nextLine().toUpperCase();
+                    switch (ledgerSelection) {
+                        case "A":
+                            ledger.displayAllTransactions();
+                            break;
+                        case "D":
+                            ledger.displayDeposits();
+                            break;
+                        case "P":
+                            ledger.displayPayments();
+                            break;
+                        case "R":
+                            ledger.displayReports();
+                            break;
+                        case "0":
+                            break;
+                        default:
+                            System.out.println("Invalid selection.");
+                    }
+                    break;
+                case "E":
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Invalid selection.");
+
             }
+
+
         }
     }
 }
