@@ -1,9 +1,9 @@
 package org.yearup;
 
-import java.time.LocalDate;
-import java.time.chrono.ChronoLocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Scanner;
+import java.time.LocalDate;
+import java.time.YearMonth;
 
 public class Ledger {
     private ArrayList<Transaction> transactions;
@@ -12,89 +12,175 @@ public class Ledger {
         this.transactions = transactions;
     }
 
-    public void displayAllEntries() {
-        Collections.reverse(transactions);
-        for (Transaction t : transactions) {
-            System.out.println(t);
+    public void displayAllTransactions() {
+        for (Transaction transaction : transactions) {
+            System.out.println(transaction.toString());
         }
     }
 
     public void displayDeposits() {
-        Collections.reverse(transactions);
-        for (Transaction t : transactions) {
-            if (t.getAmount() > 0) {
-                System.out.println(t);
+        for (Transaction transaction : transactions) {
+            if (transaction.getAmount() >= 0) {
+                System.out.println(transaction.toString());
             }
         }
     }
 
     public void displayPayments() {
-        Collections.reverse(transactions);
-        for (Transaction t : transactions) {
-            if (t.getAmount() < 0) {
-                System.out.println(t);
+        for (Transaction transaction : transactions) {
+            if (transaction.getAmount() < 0) {
+                System.out.println(transaction.toString());
             }
         }
     }
 
-    public void runReport(String reportSelection) {
-        switch (reportSelection) {
-            case "1":
-                LocalDate now = LocalDate.now();
-                LocalDate startOfMonth = LocalDate.of(now.getYear(), now.getMonthValue(), 1);
-                ChronoLocalDate endOfLastDate = null;
-                ChronoLocalDate startOfLocalDate = null;
-                for (Transaction t : transactions) {
-                    if (t.getDate().isAfter(startOfLocalDate) && t.getDate().isBefore(endOfLastDate)) {
-                        System.out.println(t);
-                    }
-                }
-                break;
-            case "2":
-                LocalDate lastMonth = LocalDate.now().minusMonths(1);
-                LocalDate startOfLastMonth = LocalDate.of(lastMonth.getYear(), lastMonth.getMonthValue(), 1);
-                LocalDate endOfLastMonth = startOfLastMonth.plusMonths(1).minusDays(1);
-                for (Transaction t : transactions) {
-                    if (t.getDate().isAfter(startOfLastMonth) && t.getDate().isBefore(endOfLastMonth)) {
-                        System.out.println(t);
-                    }
-                }
-                break;
-            case "3":
-                LocalDate startOfYear = LocalDate.of(LocalDate.now().getYear(), 1, 1);
-                ChronoLocalDate endOfYear = null;
-                for (Transaction t : transactions) {
-                    if (t.getDate().isAfter(startOfYear) && t.getDate().isBefore(endOfYear)) {
-                        System.out.println(t);
-                    } else if (t.getDate().equals(startOfYear)) {
-                        System.out.println(t);
-                    }
-                }
-                break;
-            case "4":
-                LocalDate lastYear = LocalDate.now().minusYears(1);
-                LocalDate startOfLastYear = LocalDate.of(lastYear.getYear(), 1, 1);
-                LocalDate endOfLastYear = startOfLastYear.plusYears(1).minusDays(1);
-                for (Transaction t : transactions) {
-                    if (t.getDate().isAfter(startOfLastYear) && t.getDate().isBefore(endOfLastYear)) {
-                        System.out.println(t);
-                    }
-                }
-                break;
-            case "5":
-                System.out.println("Please enter the vendor name:");
-                String vendor = System.console().readLine();
-                for (Transaction t : transactions) {
-                    if (t.getVendor().equalsIgnoreCase(vendor)) {
-                        System.out.println(t);
-                    }
-                }
-                break;
-            default:
-                System.out.println("Invalid report option.");
+    public void displayReports() {
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("Please choose a report:");
+            System.out.println("1) Month To Date");
+            System.out.println("2) Previous Month");
+            System.out.println("3) Year To Date");
+            System.out.println("4) Previous Year");
+            System.out.println("5) Search by Vendor");
+            System.out.println("0) Back");
+            System.out.println("H) Home");
+
+            String reportSelection = scanner.nextLine();
+
+            switch (reportSelection) {
+                case "1":
+                    displayMonthToDateReport();
+                    break;
+                case "2":
+                    displayPreviousMonthReport();
+                    break;
+                case "3":
+                    displayYearToDateReport();
+                    break;
+                case "4":
+                    displayPreviousYearReport();
+                    break;
+                case "5":
+                    displayVendorReport();
+                    break;
+                case "0":
+                    return;
+                case "H":
+                    // Go back to the home page
+                    System.out.println("Returning to home page...");
+                    return;
+                default:
+                    System.out.println("Invalid selection.");
+
+            }
         }
     }
 
-    public void addTransaction(Transaction payment) {
+    private void displayYearToDateReport() {
+         {
+            LocalDate now = LocalDate.now();
+            LocalDate startOfYear = LocalDate.of(now.getYear(), 1, 1);
+            double totalAmount = 0.0;
+
+            System.out.println("Transactions for Year To Date:");
+
+            for (Transaction transaction : transactions) {
+                LocalDate transactionDate = LocalDate.parse(transaction.getDate());
+                if (!transactionDate.isBefore(startOfYear)) {
+                    System.out.println(transaction.toString());
+                    totalAmount += transaction.getAmount();
+                }
+            }
+
+            System.out.println("Total amount for Year To Date: " + totalAmount);
+        }
+
+    }
+
+    private void displayMonthToDateReport() {
+        LocalDate now = LocalDate.now();
+        LocalDate startOfMonth = LocalDate.of(now.getYear(), now.getMonth(), 1);
+        double totalAmount = 0.0;
+
+        System.out.println("Transactions for Month To Date:");
+
+        for (Transaction transaction : transactions) {
+            LocalDate transactionDate = LocalDate.parse(transaction.getDate());
+            if (!transactionDate.isBefore(startOfMonth)) {
+                System.out.println(transaction.toString());
+                totalAmount += transaction.getAmount();
+            }
+        }
+
+        System.out.println("Total amount for Month To Date: " + totalAmount);
+    }
+
+    private void displayPreviousMonthReport() {
+        LocalDate now = LocalDate.now();
+        LocalDate startOfMonth = LocalDate.of(now.getYear(), now.getMonth().minus(1), 1);
+        LocalDate endOfMonth = YearMonth.of(now.getYear(), now.getMonth().minus(1)).atEndOfMonth();
+        double totalAmount = 0.0;
+
+        System.out.println("Transactions for Previous Month:");
+
+        for (Transaction transaction : transactions) {
+            LocalDate transactionDate = LocalDate.parse(transaction.getDate());
+            if (transactionDate.isAfter(startOfMonth) && transactionDate.isBefore(endOfMonth.plusDays(1))) {
+                System.out.println(transaction.toString());
+                totalAmount += transaction.getAmount();
+            }
+        }
+
+        System.out.println("Total amount for Year To Date: " + totalAmount);
+    }
+
+    private void displayPreviousYearReport() {
+        LocalDate now = LocalDate.now();
+        LocalDate startOfYear = LocalDate.of(now.getYear().minus(1), 1, 1);
+        LocalDate endOfYear = LocalDate.of(now.getYear().minus(1), 12, 31);
+        double totalAmount = 0.0;
+
+        System.out.println("Transactions for Previous Year:");
+
+        for (Transaction transaction : transactions) {
+            LocalDate transactionDate = LocalDate.parse(transaction.getDate());
+            if (transactionDate.isAfter(startOfYear.minusDays(1)) && transactionDate.isBefore(endOfYear.plusDays(1))) {
+                System.out.println(transaction.toString());
+                totalAmount += transaction.getAmount();
+            }
+        }
+
+        System.out.println("Total amount for Previous Year: " + totalAmount);
+    }
+
+    private void displayVendorReport() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Please enter a vendor name:");
+        String vendorName = scanner.nextLine();
+
+        double totalAmount = 0.0;
+
+        System.out.println("Transactions for Vendor: " + vendorName);
+
+        for (Transaction transaction : transactions) {
+            if (transaction.getVendor().equalsIgnoreCase(vendorName)) {
+                System.out.println(transaction.toString());
+                totalAmount += transaction.getAmount();
+            }
+        }
+
+        System.out.println("Total amount for Vendor " + vendorName + ": " + totalAmount);
+
+        System.out.println("Press 0 to go back");
+        while (true) {
+            String selection = scanner.nextLine();
+            if (selection.equals("0")) {
+                return;
+            }
+
+        }
     }
 }
